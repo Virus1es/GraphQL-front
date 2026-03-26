@@ -1,21 +1,36 @@
 import './App.css'
 import {useEffect, useState} from "react";
 import {useMutation, useQuery} from "@apollo/client/react";
-import {GET_ALL_USERS} from "./query/user.js";
+import {GET_ALL_USERS, GET_ONE_USER} from "./query/user.js";
 import {CREATE_USER} from "./mutations/user.js";
 
 function App() {
-    const {data, loading, error, refetch} = useQuery(GET_ALL_USERS)
+    const {data, loading, error, refetch} = useQuery(GET_ALL_USERS);
+    const {
+        data: oneUser,
+        loading: userLoading,
+        error: userError,
+        refetch: UserRefetch
+    } = useQuery(GET_ONE_USER, {
+        variables: {
+            id: 1
+        }
+    });
+
     const [newUser] = useMutation(CREATE_USER);
     const [users, setUsers] = useState([]);
     const [username, setUsername] = useState('');
     const [age, setAge] = useState(0);
+
+    console.log(oneUser);
 
     useEffect(() => {
         if(!loading) {
             setUsers(data.getAllUsers);
         }
     }, [data]);
+
+
 
     const addUser = (e) => {
         e.preventDefault();
